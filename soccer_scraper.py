@@ -38,18 +38,67 @@ class TeamScraper:
         
 
     def get_results(self, round=''):
-        pass
+        url = f'http://www.shirefootball.com/ssresult.asp?Round={round}&Age={self.age}&Grade={self.grade}&Club={self.name}&Date='
+        
+        try:
+            html = requests.get(url)
+        except requests.exceptions.RequestException as e:
+            print(e)
+
+        if html.status_code == 200:
+            soup = BeautifulSoup(html.text, 'html.parser')
+            rows = soup.findChildren('table')[5].findChildren('table')[0].findChildren('tr')[1:]
+            
+            results = []  
+
+            for row in rows:
+                result = {}
+                result['date'] = row('td')[0].text
+                result['round'] = row('td')[2].text
+                result['homeTeam'] = row('td')[3].text
+                result['homeScore'] = row('td')[4].text
+                result['awayScore'] = row('td')[6].text
+                result['awayTeam'] = row('td')[7].text
+                results.append(result)
+
+        return results
 
 
     def get_ladder(self):
-        pass
+        url = f'http://www.shirefootball.com/sstables.asp?Age={self.age}&Grade={self.grade}'
+
+        try:
+            html = requests.get(url)
+        except requests.exceptions.RequestException as e:
+            print(e)
+
+        if html.status_code == 200:
+            soup = BeautifulSoup(html.text, 'html.parser')
+            rows = soup.findChildren('table')[3].findChildren('tr')[4:-1]
+            
+            ladder = []           
+            
+            for row in rows:
+                team = {}
+                team['position'] = row('td')[1].text[:-1]
+                team['name'] = row('td')[2].text
+                team['played'] = row('td')[3].text
+                team['won'] = row('td')[4].text
+                team['drawn'] = row('td')[5].text
+                team['lost'] = row('td')[6].text
+                team['goalsFor'] = row('td')[7].text
+                team['goalsAgainst'] = row('td')[8].text
+                team['goalDifference'] = row('td')[9].text
+                team['points'] = row('td')[10].text
+                ladder.append(team)
+
+        return ladder
 
 
 def main():
-    # Enter Team name, age, grade
-    team = TeamScraper('Gymea United', 'WS', 'G') 
+    # Enter team name, age, grade
+    team = TeamScraper('Gymea United', 'WS', 'g') 
     
-    fixtures = team.get_fixtures()
     
 if __name__ == '__main__':
     main()
