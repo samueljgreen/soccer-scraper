@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
+import csv
 
 class TeamScraper:
 
@@ -97,7 +98,7 @@ class TeamScraper:
 
 def main():
     # Enter team name, age, grade
-    team = TeamScraper('Gymea United', 'WS', 'g') 
+    team = TeamScraper('Gymea United', 'AL', '01') 
     
     fixtures = team.get_fixtures()
     keys = fixtures[0].keys()
