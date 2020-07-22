@@ -99,6 +99,27 @@ def main():
     # Enter team name, age, grade
     team = TeamScraper('Gymea United', 'WS', 'g') 
     
-    
+    fixtures = team.get_fixtures()
+    keys = fixtures[0].keys()
+    with open('fixtures.csv', 'w') as f:        
+        w = csv.DictWriter(f, keys)
+        w.writeheader()
+        w.writerows(fixtures)
+
+    results = team.get_results()
+    keys = results[0].keys()
+    with open('results.csv', 'w') as f:
+        w = csv.DictWriter(f, keys)
+        w.writeheader()
+        w.writerows(results)
+
+    ladder = team.get_ladder()
+    keys = ladder[0].keys()
+    with open('ladder.csv', 'w') as f:
+        w = csv.DictWriter(f, keys)
+        w.writeheader()
+        w.writerows(ladder)
+
+
 if __name__ == '__main__':
     main()
