@@ -102,6 +102,14 @@ class TeamScraper:
         return ladder
 
 
+def write_to_csv(data, filename):
+    keys = data[0].keys()
+    with open(filename, "w") as f:
+        w = csv.DictWriter(f, keys)
+        w.writeheader()
+        w.writerows(data)
+
+
 def main():
     parser = argparse.ArgumentParser(description="Get team fixtures, results or ladder")
     parser.add_argument("-f", "--fixtures", action="store_true", help="Get fixtures")
@@ -117,27 +125,15 @@ def main():
 
     if args.fixtures:
         fixtures = team.get_fixtures(args.round)
-        keys = fixtures[0].keys()
-        with open("fixtures.csv", "w") as f:
-            w = csv.DictWriter(f, keys)
-            w.writeheader()
-            w.writerows(fixtures)
+        write_to_csv(fixtures, "fixtures.csv")
 
     if args.results:
         results = team.get_results(args.round)
-        keys = results[0].keys()
-        with open("results.csv", "w") as f:
-            w = csv.DictWriter(f, keys)
-            w.writeheader()
-            w.writerows(results)
+        write_to_csv(results, "results.csv")
 
     if args.ladder:
         ladder = team.get_ladder()
-        keys = ladder[0].keys()
-        with open("ladder.csv", "w") as f:
-            w = csv.DictWriter(f, keys)
-            w.writeheader()
-            w.writerows(ladder)
+        write_to_csv(ladder, "ladder.csv")
 
 
 if __name__ == "__main__":
